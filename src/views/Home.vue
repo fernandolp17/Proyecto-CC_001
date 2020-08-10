@@ -13,7 +13,7 @@
     <v-img height="100%" width="100%">
       <l-map ref="map" id="karte" :zoom="zoom" :center="center">
         <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
-        <l-marker :lat-lng="marker"  @click="dialog = true"></l-marker>
+        <l-marker v-for="event in crimeEvents" :key="event.properties.id" :lat-lng="processPosition(event.geometry.coordinates[1], event.geometry.coordinates[0])"  @click="dialog = true"></l-marker>
       </l-map>
     </v-img>
 
@@ -32,15 +32,23 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
+const { crimes } = require('../wea_hardcodeada/crimenes');
+
 export default {
     components: { LMap,  LTileLayer, LMarker},
     data() {
       return {
         zoom:16,
-        center: L.latLng(48.13,11.6),
+        center: L.latLng(-12.02335258576796,-77.03407019376755),
         marker: L.latLng(48.13,11.6),
-        dialog: false
+        dialog: false,
+        crimeEvents : crimes,
       }
-    }
+    },
+  methods:{
+      processPosition : function(lat, lon) {
+        return L.latLng(lat, lon);
+      }
+  }
 };
 </script>
