@@ -1,46 +1,75 @@
 <template>
-  <v-container fluid fill-height class="ma-0 pa-0">
+  <v-div>
+    <v-app-bar dense app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>Mapa de la ciudad</v-toolbar-title>
 
-    <v-dialog v-model="dialog" max-width="290">
-      <v-card>
-        <v-card-title class="headline">A Dialog Box attached to a Marker :-)</v-card-title> 
-        <v-card-actions>  
-          <v-btn color="primary" @click="dialog = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      <v-spacer></v-spacer>
+    </v-app-bar>
+    <v-container>
+      <v-navigation-drawer app v-model="drawer" temporary dark>
+        <v-checkbox v-for="crime in totalCrimes" v-model="crimesSelected" :label="crime" :value="crime" :key="crime"></v-checkbox>
+      </v-navigation-drawer>
+    </v-container>
 
     <v-img height="100%" width="100%">
-      <l-map ref="map" id="karte" :zoom="zoom" :center="center">
+      <l-map ref="myMap" id="karte" :zoom="zoom" :center="center" :options="{zoomControl: false}">
         <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
-        <l-marker :lat-lng="marker"  @click="dialog = true"></l-marker>
+        <l-marker v-for="event in crimesMarked" :key="event.properties.id" :lat-lng="processPosition(event.geometry.coordinates[1], event.geometry.coordinates[0])"  @click="dialog = true">
+          <l-popup> {{ event.properties.type }} </l-popup>
+        </l-marker>
       </l-map>
     </v-img>
-
-  </v-container>
+  </v-div>
 </template>
 
 <script>
-import L from 'leaflet';
-import { LMap,LMarker, LTileLayer} from 'vue2-leaflet';
-import 'leaflet/dist/leaflet.css'
+  import L from 'leaflet';
+  import { LMap, LTileLayer, LMarker, LPopup} from 'vue2-leaflet';
+  import 'leaflet/dist/leaflet.css'
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-});
+  const { crimes } = require('../constantes/crime_events');
+  const { crimeTypes } = require('../constantes/crime_enums');
 
-export default {
-    components: { LMap,  LTileLayer, LMarker},
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+  });
+
+  export default {
+    name: 'Mapa',
+
+    components: {
+      LMap,  LTileLayer, LMarker, LPopup
+    },
     data() {
       return {
         zoom:16,
-        center: L.latLng(48.13,11.6),
-        marker: L.latLng(48.13,11.6),
-        dialog: false
+        center: L.latLng(-12.022447522008559, -77.03334331512451),
+        url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+        attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        marker: L.latLng(-12.022447522008559, -77.03334331512451),
+        crimeEvents : crimes,
+        drawer: false,
+        crimesSelected: [],
+        totalCrimes : Object.keys(crimeTypes),
       }
+    },
+    methods: {
+      processPosition : function(lat, lon) {
+        return L.latLng(lat, lon);
+      },
+    },
+    computed:{
+      crimesMarked : function(){
+        const filtered_events = this.crimeEvents.filter( crime => this.crimesSelected.includes(crime.properties.type.toUpperCase()));
+        return filtered_events;
+      }
+    },
+    mounted() {
+      this.crimesSelected = Object.keys(crimeTypes);
     }
-};
+  };
 </script>
