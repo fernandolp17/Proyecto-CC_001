@@ -1,4 +1,4 @@
-const { crimeTypes } = require('./crimeEnums');
+const { crimeTypes } = require('./crime_enums');
 
 const crimes = [
     {
