@@ -2,14 +2,17 @@
   <v-div>
     <v-app-bar dense app>
       <v-menu
-              top
-              :close-on-content-click="closeOnContentClick"
+              transition="slide-x-transition"
+              bottom
+              right
               :offset-y="offsetY"
+              :close-on-content-click="closeOnContentClick"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
                   v-bind="attrs"
                   v-on="on"
+                  color="red"
                   icon
           >
             <v-icon medium>filter_list</v-icon>
@@ -22,8 +25,9 @@
         >
           <v-checkbox  v-model="crimesSelected" :label="crime" :value="crime" ></v-checkbox>
         </v-list>
-
       </v-menu>
+
+
       <v-toolbar-title>Mapa de la ciudad</v-toolbar-title>
 
       <v-spacer></v-spacer>
