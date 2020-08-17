@@ -1,16 +1,34 @@
 <template>
   <v-div>
     <v-app-bar dense app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-menu
+              top
+              :close-on-content-click="closeOnContentClick"
+              :offset-y="offsetY"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  icon
+          >
+            <v-icon medium>filter_list</v-icon>
+          </v-btn>
+        </template>
+        <v-list
+                v-for="crime in totalCrimes"
+                :key="crime"
+                flat
+        >
+          <v-checkbox  v-model="crimesSelected" :label="crime" :value="crime" ></v-checkbox>
+        </v-list>
+
+      </v-menu>
       <v-toolbar-title>Mapa de la ciudad</v-toolbar-title>
 
       <v-spacer></v-spacer>
     </v-app-bar>
-    <v-container>
-      <v-navigation-drawer app v-model="drawer" temporary dark>
-        <v-checkbox v-for="crime in totalCrimes" v-model="crimesSelected" :label="crime" :value="crime" :key="crime"></v-checkbox>
-      </v-navigation-drawer>
-    </v-container>
+
 
     <v-img height="100%" width="100%">
       <l-map ref="myMap" id="karte" :zoom="zoom" :center="center" :options="{zoomControl: false}">
@@ -55,6 +73,8 @@
         drawer: false,
         crimesSelected: [],
         totalCrimes : Object.keys(crimeTypes),
+        closeOnContentClick: false,
+        offsetY : true,
       }
     },
     methods: {
