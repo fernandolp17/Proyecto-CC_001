@@ -32,7 +32,14 @@
 
     <v-app-bar dense app>
       <v-container>
-        <v-row align="center" justify="space-between" no-gutters>
+        <v-row
+          align="center"
+          justify-lg="space-between"
+          justify-xs="space-between"
+          justify-sm="space-between"
+          justify-md="space-between"
+          no-gutters
+        >
           <v-btn
             v-bind="attrs"
             v-on="on"
