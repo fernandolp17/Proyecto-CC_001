@@ -1,44 +1,85 @@
 <template>
   <v-div>
+    <v-navigation-drawer
+      v-model="drawerSIDEBAR"
+      color="rgba(255, 212, 58, 0.85)"
+      absolute
+      temporary
+      hide-overlay
+    >
+      <v-list>
+        <v-subheader inset>TIPOS DE CRIMENES</v-subheader>
+        <v-list-item v-for="crime in totalCrimes" :key="crime">
+          <v-checkbox
+            v-model="crimesSelected"
+            :label="crime"
+            :value="crime"
+          ></v-checkbox>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer
+      v-model="drawerPROFILE"
+      color="rgba(255, 212, 58, 0.85)"
+      absolute
+      temporary
+      hide-overlay
+      right
+    >
+      <v-subheader inset>Este es tu perfil mijo :)</v-subheader>
+    </v-navigation-drawer>
+
     <v-app-bar dense app>
-      <v-menu
-              transition="slide-x-transition"
-              bottom
-              right
-              :offset-y="offsetY"
-              :close-on-content-click="closeOnContentClick"
-      >
-        <template v-slot:activator="{ on, attrs }">
+      <v-container>
+        <v-row align="center" justify="space-between" no-gutters>
           <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  color="red"
-                  icon
+            v-bind="attrs"
+            v-on="on"
+            color="red"
+            icon
+            @click.stop="drawerSIDEBAR = !drawerSIDEBAR"
           >
-            <v-icon medium>filter_list</v-icon>
+            <v-icon>filter_list</v-icon>
           </v-btn>
-        </template>
-        <v-list
-                v-for="crime in totalCrimes"
-                :key="crime"
-                flat
-        >
-          <v-checkbox  v-model="crimesSelected" :label="crime" :value="crime" ></v-checkbox>
-        </v-list>
-      </v-menu>
-
-
-      <v-toolbar-title>Mapa de la ciudad</v-toolbar-title>
-
+          <v-toolbar-title>Mapa de la ciudad</v-toolbar-title>
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            color="red"
+            icon
+            @click.stop="drawerPROFILE = !drawerPROFILE"
+          >
+            <v-icon>person</v-icon>
+          </v-btn>
+        </v-row>
+      </v-container>
       <v-spacer></v-spacer>
     </v-app-bar>
 
-
     <v-img height="100%" width="100%">
-      <l-map ref="myMap" id="karte" :zoom="zoom" :center="center" :options="{zoomControl: false}">
-        <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
-        <l-marker v-for="event in crimesMarked" :key="event.properties.id" :lat-lng="processPosition(event.geometry.coordinates[1], event.geometry.coordinates[0])"  @click="dialog = true">
-          <l-popup> {{ event.properties.type }} </l-popup>
+      <l-map
+        ref="myMap"
+        id="karte"
+        :zoom="zoom"
+        :center="center"
+        :options="{ zoomControl: false }"
+      >
+        <l-tile-layer
+          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+        ></l-tile-layer>
+        <l-marker
+          v-for="event in crimesMarked"
+          :key="event.properties.id"
+          :lat-lng="
+            processPosition(
+              event.geometry.coordinates[1],
+              event.geometry.coordinates[0]
+            )
+          "
+          @click="dialog = true"
+        >
+          <l-popup>{{ event.properties.type }}</l-popup>
         </l-marker>
       </l-map>
     </v-img>
@@ -74,7 +115,8 @@
         attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
         marker: L.latLng(-12.022447522008559, -77.03334331512451),
         crimeEvents : crimes,
-        drawer: false,
+        drawerSIDEBAR: false,
+        drawerPROFILE: false,
         crimesSelected: [],
         totalCrimes : Object.keys(crimeTypes),
         closeOnContentClick: false,
