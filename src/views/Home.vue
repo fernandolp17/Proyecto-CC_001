@@ -86,6 +86,17 @@
             >
               <l-popup>{{ event.properties.type }}</l-popup>
             </l-marker>
+
+            <LControl style=" position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  z-index: 9999;">
+              <v-btn color="warning" @click="">
+                REPORTAR CRIMEN
+              </v-btn>
+            </LControl>
           </l-map>
         </v-img>
       </v-app>
@@ -95,7 +106,7 @@
 
 <script>
   import L from "leaflet";
-  import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
+  import { LMap, LTileLayer, LMarker, LPopup, LControl } from "vue2-leaflet";
   import "leaflet/dist/leaflet.css";
 
   const { crimes } = require("../constantes/crime_events");
@@ -116,6 +127,7 @@
       LTileLayer,
       LMarker,
       LPopup,
+      LControl,
     },
     data() {
       return {
