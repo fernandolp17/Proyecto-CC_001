@@ -94,7 +94,9 @@
   margin: 0 auto;
   z-index: 9999;">
               <v-btn color="warning" @click="">
-                REPORTAR CRIMEN
+                <router-link to="/report">
+                  REPORTAR CRIMEN
+                </router-link>
               </v-btn>
             </LControl>
           </l-map>
