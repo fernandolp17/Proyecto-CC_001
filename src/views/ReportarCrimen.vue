@@ -1,8 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
-      v-model="drawerREGISTROCRIMEN"
-      bottom
+      v-model="drawerREGISTROCRIMEN"      
       app
       clipped
       temporary
@@ -10,6 +9,35 @@
       width="100%"
     >
       <v-subheader inset>Registro de Crimen</v-subheader>
+      <v-subheader>Por favor, llene este formulario para tener más detalles del suceso:</v-subheader>
+      <v-row justify="center">
+        <form>
+          <v-text-field
+            v-model="tipo_de_crimen"
+            :error-messages="nameErrors"
+            label="Tipo de crimen"
+            required
+            @input="$v.tipo_de_crimen.$touch()"
+            @blur="$v.tipo_de_crimen.$touch()"
+          ></v-text-field>
+          <v-text-field
+            v-model="hora_del_suceso"
+            :error-messages="nameErrors"
+            label="Hora"
+            required
+            @input="$v.hora_del_suceso.$touch()"
+            @blur="$v.hora_del_suceso.$touch()"
+          ></v-text-field>
+          <v-text-field
+            v-model="datos_adicionales"
+            :error-messages="nameErrors"
+            label="Datos adicionales"
+            required
+            @input="$v.datos_adicionales.$touch()"
+            @blur="$v.datos_adicionales.$touch()"
+          ></v-text-field>
+        </form>
+      </v-row>
     </v-navigation-drawer>
     <v-app-bar dense app clipped-right clipped-left>
       <v-container fluid>
