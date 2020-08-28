@@ -12,14 +12,11 @@
       <v-subheader>Por favor, llene este formulario para tener más detalles del suceso:</v-subheader>
       <v-row justify="center">
         <form>
-          <v-text-field
-            v-model="tipo_de_crimen"
-            :error-messages="nameErrors"
+          <v-select
             label="Tipo de crimen"
+            :items="items"
             required
-            @input="$v.tipo_de_crimen.$touch()"
-            @blur="$v.tipo_de_crimen.$touch()"
-          ></v-text-field>
+          ></v-select>
           <v-text-field
             v-model="hora_del_suceso"
             :error-messages="nameErrors"
@@ -28,14 +25,15 @@
             @input="$v.hora_del_suceso.$touch()"
             @blur="$v.hora_del_suceso.$touch()"
           ></v-text-field>
-          <v-text-field
-            v-model="datos_adicionales"
-            :error-messages="nameErrors"
-            label="Datos adicionales"
-            required
-            @input="$v.datos_adicionales.$touch()"
-            @blur="$v.datos_adicionales.$touch()"
-          ></v-text-field>
+          <v-textarea
+                  filled
+                  auto-grow
+                  label="Descripción adicional"
+                  rows="4"
+                  row-height="30"
+                  outlined
+                  v-model="textoAdicional"
+          ></v-textarea>
         </form>
       </v-row>
     </v-navigation-drawer>
@@ -78,6 +76,9 @@
 </template>
 
 <script>
+
+const { crimeTypes } = require('../constantes/crime_enums');
+
 import L from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup, LControl } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -107,6 +108,8 @@ export default {
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       marker: null,
       drawerREGISTROCRIMEN: false,
+      items: Object.keys(crimeTypes),
+      textoAdicional : "",
     };
   },
   methods: {
