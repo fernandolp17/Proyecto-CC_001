@@ -63,7 +63,7 @@
                                             :counter="9"
                                             :rules="phoneRules"
                                             label="Celular"
-                                            type="number"
+                                            type="text"
                                             outlined
                                             dense
                                             prepend-icon="mdi-cellphone"
