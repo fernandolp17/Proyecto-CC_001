@@ -9,7 +9,7 @@ export default new Vuex.Store({
       name: "Pepito",
       password: "adminadmin",
       distrito: "Callao",
-      phone: 999999999,
+      phone: "999999999",
       email: "pepito@uni.pe",
     }, ]
   },
