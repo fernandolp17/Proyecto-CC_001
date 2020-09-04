@@ -19,7 +19,7 @@
         </v-row>
         <v-row align="center" justify="center">
           <form>
-            <v-select label="Tipo de crimen" :items="items" required></v-select>
+            <v-select label="Tipo de crimen" :items="items" v-model="selectedType" required></v-select>
             <v-text-field
               v-model="hora_del_suceso"
               :error-messages="nameErrors"
@@ -42,7 +42,7 @@
         <v-row align="center" justify="center">
           <v-dialog v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">Finalizar Reporte</v-btn>
+              <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on" @click="agregarOtroCrimen">Finalizar Reporte</v-btn>
             </template>
 
             <v-card>
@@ -108,6 +108,8 @@ import L from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup, LControl } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 
+import my_store from '../store/index';
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -136,13 +138,32 @@ export default {
       items: Object.keys(crimeTypes),
       textoAdicional: "",
       dialog: false,
+      selectedType : ""
     };
   },
   methods: {
     handleClick(event) {
       console.log(event.latlng);
       this.marker = event.latlng;
+      console.log(my_store.state.stored_crimes);
     },
+    agregarOtroCrimen(){
+      const new_event = {
+        "type": "Feature",
+        "properties": {
+          id : my_store.state.stored_crimes.length + 1,
+          type: crimeTypes[this.selectedType],
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            this.marker.lng,
+            this.marker.lat,
+          ]
+        }
+      }
+      my_store.commit('addEvent', new_event);
+    }
   },
 };
 </script>

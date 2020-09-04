@@ -114,6 +114,8 @@ import "leaflet/dist/leaflet.css";
 const { crimes } = require("../constantes/crime_events");
 const { crimeTypes } = require("../constantes/crime_enums");
 
+import myStore from '../store/index'
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -139,7 +141,7 @@ export default {
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       marker: L.latLng(-12.022447522008559, -77.03334331512451),
-      crimeEvents: crimes,
+      crimeEvents: myStore.state.stored_crimes,
       drawerSIDEBAR: false,
       drawerPROFILE: false,
       crimesSelected: [],
