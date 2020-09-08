@@ -29,7 +29,7 @@
             <v-text-field
               v-model="hora_del_suceso"
               :error-messages="nameErrors"
-              label="Hora"
+              label="Hora (Ejemplo 13:26)"
               required
               @input="$v.hora_del_suceso.$touch()"
               @blur="$v.hora_del_suceso.$touch()"
@@ -127,7 +127,7 @@ import my_store from "../store/index";
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("../assets/violence.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
