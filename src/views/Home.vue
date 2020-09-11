@@ -76,17 +76,19 @@
             <l-marker
               v-for="event in crimesMarked"
               :key="event.properties.id"
+              :icon="crime_pictures[event.properties.type]"
               :lat-lng="
             processPosition(
               event.geometry.coordinates[1],
               event.geometry.coordinates[0]
             )
           "
+
               @click="dialog = true"
+
             >
               <l-popup>{{ event.properties.type }}</l-popup>
             </l-marker>
-
             <LControl
               style=" position: fixed;
   left: 50%;
@@ -108,11 +110,14 @@
 
 <script>
 import L from "leaflet";
-import { LMap, LTileLayer, LMarker, LPopup, LControl } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup, LControl, LIcon } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
+import { crime_pictures } from '../constantes/crime_pictures'
 
 const { crimes } = require("../constantes/crime_events");
 const { crimeTypes } = require("../constantes/crime_enums");
+
+import myStore from '../store/index'
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -130,6 +135,7 @@ export default {
     LMarker,
     LPopup,
     LControl,
+    LIcon,
   },
   data() {
     return {
@@ -139,7 +145,7 @@ export default {
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       marker: L.latLng(-12.022447522008559, -77.03334331512451),
-      crimeEvents: crimes,
+      crimeEvents: myStore.state.stored_crimes,
       drawerSIDEBAR: false,
       drawerPROFILE: false,
       crimesSelected: [],
@@ -148,6 +154,33 @@ export default {
       offsetY: true,
       drawer: null,
       drawerRight: null,
+      crime_pictures : {
+        'Asesinato': L.icon({
+          iconUrl: require('../assets/murder.png'),
+          iconSize: [32, 37],
+          iconAnchor: [16, 37]
+        }),
+        'Asalto' : L.icon({
+          iconUrl: require('../assets/gun.png'),
+          iconSize: [32, 37],
+          iconAnchor: [16, 37]
+        }),
+        'Robo' : L.icon({
+          iconUrl: require('../assets/robo.png'),
+          iconSize: [32, 37],
+          iconAnchor: [16, 37]
+        }),
+        'Violencia' : L.icon({
+          iconUrl: require('../assets/violence.png'),
+          iconSize: [32, 37],
+          iconAnchor: [16, 37]
+        }),
+        'Accidente' :  L.icon({
+          iconUrl: require('../assets/accidente.png'),
+          iconSize: [32, 37],
+          iconAnchor: [16, 37]
+        }),
+      },
     };
   },
   methods: {
